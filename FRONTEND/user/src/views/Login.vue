@@ -1,5 +1,5 @@
 <template>
-  <div class="login-container">
+  <div class="login-container" style="background-color: cornflowerblue">
     <div class="card login-card">
       <div class="card-body">
         <h2 class="login-title">Đăng nhập</h2>

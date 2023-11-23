@@ -4,10 +4,11 @@
     <div class="container">
       <div v-if="product">
         <div class="product-details">
-          <div class="product-image">
+          <div class="product-image col-4">
             <img
               src="@/images/1700232520047-d340edda2b0eacb7ddc47537cddb5e08.jpg"
               alt="Product Image"
+              style="width: 300px; height: 300px;"
             />
           </div>
           <div class="product-info">
@@ -30,11 +31,14 @@
             <div class="button-wrapper">
               <button
                 @click="datHang()"
-                class="btn btn-primary"
+                class="btn btn-info me-2"
                 :disabled="quantity > product.hangHoa.SoLuongHang"
               >
                 Mua Ngay
               </button>
+              <button @click="addToCart" class="btn btn-success">Thêm vào giỏ hàng</button>
+            </div>
+            <div class="button-wrapper">
             </div>
           </div>
         </div>
@@ -115,7 +119,43 @@ async datHang() {
     console.error(error);
     // Xử lý lỗi khi không thể đặt hàng
   }
-}
+},
+  async addToCart() {
+    try {
+      const hangHoaId = this.$route.params.MSHH;
+      const soLuong = this.quantity;
+      const tenHH = this.product.hangHoa.TenHH;
+
+      // Lấy giá của sản phẩm
+      const giaSanPham = this.product.hangHoa.Gia;
+
+      // Tính giá đặt hàng
+      const giaDatHang = giaSanPham * soLuong;
+      // Lấy thông tin sản phẩm từ dữ liệu của component (this.product)
+
+      // Tạo một đối tượng orderData chứa thông tin sản phẩm để đặt hàng
+      const orderData = {
+        MSHH: hangHoaId,
+        TenHH: tenHH,
+        GiaDatHang: giaDatHang,
+        SoLuong: soLuong, // Số lượng sản phẩm muốn đặt hàng (trong ví dụ này là 1)
+        GiamGia: 0, // Giảm giá (nếu có)
+      };
+
+      console.log(orderData);
+
+      // Gọi phương thức datHang từ khachHangService để thực hiện đặt hàng
+      const result = await KhachHangService.themVaoGio(orderData);
+      console.log(result);
+
+      // Hiển thị thông báo thành công cho người dùng
+      alert("Thêm sản phẩm vào giỏ hàng thành công!");
+    } catch (error) {
+      // Xử lý lỗi nếu có
+      console.error(error);
+      alert("Đã xảy ra lỗi khi thêm vào giỏ hàng");
+    }
+  },
   },
 };
 </script>
@@ -133,8 +173,8 @@ async datHang() {
   align-items: center;
 }
 .product-image img {
-  width: 300px;
-  height: 300px;
+  width: 500px;
+  height: 500px;
   object-fit: cover;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);

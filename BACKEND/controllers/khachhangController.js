@@ -4,6 +4,8 @@ const KhachHang = require("../models/KhachHang");
 const DatHang = require("../models/DatHang");
 const ChiTietDatHang = require("../models/ChiTietDatHang");
 const crypto = require("crypto");
+const HangHoa = require("../models/HangHoa");
+const GioHang = require("../models/GioHang");
 
 const generateSecretKey = () => {
   return crypto.randomBytes(32).toString("hex");
@@ -63,24 +65,6 @@ exports.deleteKhachHang = async (req, res) => {
 
 // Đăng nhập
 exports.login = async (req, res) => {
-  // const { Email, Password } = req.body;
-
-  // try {
-  //   // Tìm khách hàng dựa trên email và password
-  //   const khachHang = await KhachHang.findOne({ Email, Password });
-
-  //   // Kiểm tra xem khách hàng có tồn tại không
-  //   if (!khachHang) {
-  //     return res
-  //       .status(401)
-  //       .json({ message: "Email hoặc mật khẩu không chính xác" });
-  //   }
-
-  //   // Đăng nhập thành công
-  //   res.json({ message: "Đăng nhập thành công" });
-  // } catch (error) {
-  //   res.status(500).json({ error: error.message });
-  // }
   try {
     const { Email, Password } = req.body;
 
@@ -101,7 +85,7 @@ exports.login = async (req, res) => {
       { khachHangId: khachHang._id },
       process.env.JWT_SECRET_KEY,
       {
-        expiresIn: "1h",
+        expiresIn: "23h",
       }
     );
 
@@ -290,6 +274,80 @@ exports.getXemDonHang = async (req, res) => {
     res.status(200).json(donHangList);
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Tìm kiếm hàng hóa theo tên
+exports.searchHangHoa = async (req, res) => {
+  try {
+    const { TenHH } = req.body;
+    console.log(TenHH);
+    if (TenHH) {
+      const hangHoaList = await HangHoa.find({
+        TenHH,
+      });
+      res.json(hangHoaList);
+    } else {
+      res.status(400).json({ error: "Missing TenHH in the request body" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.addToCart = async (req, res) => {
+  try {
+    const { MSHH, TenHH, GiaDatHang, SoLuong, GiamGia } = req.body;
+    const khachHangId = req.user; // Lấy ID khách hàng từ request
+
+    // Tạo một bản ghi mới trong bảng GioHang
+    const gioHang = new GioHang({
+      MSHH,
+      TenHH,
+      GiaDatHang,
+      SoLuong,
+      GiamGia,
+      MSKH: khachHangId, // Lưu ID khách hàng vào trường MSKH
+    });
+
+    // Lưu giỏ hàng vào cơ sở dữ liệu
+    await gioHang.save();
+
+    res.status(201).json({ message: "Thêm vào giỏ hàng thành công", gioHang });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Lấy giỏ hàng của khách hàng
+exports.getGioHang = async (req, res) => {
+  try {
+    const gioHang = await GioHang.find({ MSKH: req.user });
+
+    res.json(gioHang);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Xem các đơn hàng của khách hàng
+exports.getXemDonHang = async (req, res) => {
+  try {
+    const khachHangId = req.user;
+    console.log(khachHangId);
+
+    // Tìm các đơn hàng của khách hàng trong bảng DatHang
+    const donHangList = await DatHang.find({ MSKH: khachHangId });
+
+    // Kiểm tra xem có đơn hàng nào hay không
+    if (donHangList.length === 0) {
+      return res.status(404).json({ message: "Không tìm thấy đơn hàng" });
+    }
+
+    // Trả về danh sách đơn hàng của khách hàng
+    res.json(donHangList);
+  } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };

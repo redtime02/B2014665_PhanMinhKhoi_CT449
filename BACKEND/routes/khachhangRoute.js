@@ -3,6 +3,12 @@ const router = express.Router();
 const khachHangController = require("../controllers/khachhangController");
 const authMiddleware = require("../middlewares/authMiddleware");
 
+// Lấy giỏ hàng
+router.get("/giohang", authMiddleware, khachHangController.getGioHang);
+
+// Route để xem các đơn hàng của khách hàng
+router.get("/get-order", authMiddleware, khachHangController.getXemDonHang);
+
 // Tạo khách hàng mới
 router.post("/", khachHangController.register);
 
@@ -25,5 +31,11 @@ router.get("/", khachHangController.getKhachHangList);
 router.post("/order", authMiddleware, khachHangController.datHang);
 
 router.get("/donhang", authMiddleware, khachHangController.getXemDonHang);
+
+// Route tìm kiếm hàng hóa theo tên
+router.post("/hanghoa/search", khachHangController.searchHangHoa);
+
+// Thêm vào giỏ hàng
+router.post("/cart", authMiddleware, khachHangController.addToCart);
 
 module.exports = router;

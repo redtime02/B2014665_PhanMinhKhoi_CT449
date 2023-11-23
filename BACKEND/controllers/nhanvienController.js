@@ -60,7 +60,7 @@ exports.adminLogin = async (req, res) => {
       { nhanVienId: nhanVien._id },
       process.env.JWT_SECRET_KEY,
       {
-        expiresIn: "1h",
+        expiresIn: "23h",
       }
     );
 
@@ -355,5 +355,15 @@ exports.getHangHoaByMSHH = async (req, res) => {
     res.json(hangHoa);
   } catch (error) {
     res.status(500).json({ error: error.message });
+  }
+};
+
+exports.createKhachHang = async (req, res) => {
+  try {
+    const khachHang = new KhachHang(req.body);
+    const savedKhachHang = await khachHang.save();
+    res.status(201).json(savedKhachHang);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
   }
 };

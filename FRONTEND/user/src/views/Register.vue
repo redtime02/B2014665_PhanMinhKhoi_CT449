@@ -1,5 +1,5 @@
 <template>
-  <div class="register-container">
+  <div class="register-container" style="background-color: cornflowerblue">
     <div class="card register-card">
       <div class="card-body">
         <h2 class="register-title">Đăng ký</h2>

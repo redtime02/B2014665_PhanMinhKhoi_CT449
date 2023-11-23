@@ -65,6 +65,10 @@ class AdminService {
   async getHangHoaByMSHH(MSHH) {
     return (await this.api.get(`/hanghoa/${MSHH}`)).data;
   }
+
+  async createKhachHang(data) {
+    return (await this.api.post("/khachhang", data)).data;
+  }
 }
 
 export default new AdminService();

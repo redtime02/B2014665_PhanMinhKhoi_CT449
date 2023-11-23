@@ -3,6 +3,11 @@
     <Header />
     <div class="container">
       <h2 class="text-center mt-4">Danh sách khách hàng</h2>
+      <div class="d-flex justify-content-end mt-4">
+        <button class="btn btn-primary mx-auto w-15" @click="addUser">
+          <i class="fas fa-plus"></i> Thêm khách hàng
+        </button>
+      </div>
       <div class="table-responsive mt-4">
         <table class="table mt-4 table-striped">
           <thead>
@@ -68,6 +73,9 @@ export default {
       } catch (error) {
         console.error(error);
       }
+    },
+    addUser() {
+      this.$router.push({ name: "customer.add" });
     },
   },
 };

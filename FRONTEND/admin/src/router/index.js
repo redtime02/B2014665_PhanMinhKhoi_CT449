@@ -6,6 +6,7 @@ import DonHangList from "@/views/DonHangList.vue";
 import AddHangHoa from "@/views/AddHangHoa.vue";
 import EditHangHoa from "@/views/EditHangHoa.vue";
 import ChiTietDonHang from "@/views/ChiTietDonHang.vue";
+import AddKhachHang from "@/views/AddKhachHang.vue";
 
 const routes = [
   {
@@ -43,6 +44,11 @@ const routes = [
     path: "/donhang/:id",
     name: "ChiTietDonHang",
     component: ChiTietDonHang,
+  },
+  {
+    path: "/customer-add",
+    name: "customer.add",
+    component: AddKhachHang,
   },
 ];
 const router = createRouter({

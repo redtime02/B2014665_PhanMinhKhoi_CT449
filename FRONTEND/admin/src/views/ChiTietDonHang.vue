@@ -100,9 +100,9 @@ export default {
         this.chiTietDonHang.datHang.MSKH
       );
       this.chiTietDonHang.HoTenKH = khachhang.HoTenKH;
-      console.log(this.chiTietDonHang.chiTietDatHang[0].MSHH);
+      console.log(this.chiTietDonHang.chiTietDatHang[0]?.MSHH);
       const tenHH = await AdminService.getHangHoaByMSHH(
-        this.chiTietDonHang.chiTietDatHang[0].MSHH
+        this.chiTietDonHang.chiTietDatHang[0]?.MSHH
       );
       this.chiTietDonHang.chiTietDatHang[0].TenHH = tenHH.TenHH;
     } catch (error) {

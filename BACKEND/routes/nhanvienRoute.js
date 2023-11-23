@@ -66,4 +66,6 @@ router.get(
   nhanVienController.getHangHoaByMSHH
 );
 
+router.post("/khachhang", adminMiddleware, nhanVienController.createKhachHang);
+
 module.exports = router;

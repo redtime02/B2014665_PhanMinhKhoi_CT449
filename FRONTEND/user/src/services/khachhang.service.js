@@ -74,6 +74,42 @@ class KhachHangService {
       throw new Error(error.response.data.error);
     }
   }
+
+  async searchHangHoa(searchQuery) {
+    try {
+      const response = await this.api.post("/hanghoa/search", searchQuery);
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response.data.error);
+    }
+  }
+
+  async themVaoGio(orderData) {
+    try {
+      const response = await this.api.post("/cart", orderData);
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response.data.error);
+    }
+  }
+
+  async getGioHang() {
+    try {
+      const response = await this.api.get("/giohang"); // Gửi yêu cầu GET để lấy giỏ hàng từ API
+      return response.data; // Trả về dữ liệu giỏ hàng
+    } catch (error) {
+      throw new Error("Không thể lấy giỏ hàng"); // Xử lý lỗi nếu có
+    }
+  }
+
+  async getXemDonHang() {
+    try {
+      const response = await this.api.get("/get-order"); // Gửi yêu cầu GET để lấy giỏ hàng từ API
+      return response.data; // Trả về dữ liệu giỏ hàng
+    } catch (error) {
+      throw new Error("Không thể lấy đơn hàng"); // Xử lý lỗi nếu có
+    }
+  }
 }
 
 export default new KhachHangService();
